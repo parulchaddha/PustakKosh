@@ -1,4 +1,4 @@
-from flask import Flask,render_template,request,redirect,url_for,session
+from flask import Flask,render_template,request,redirect,url_for,session,jsonify
 from flask_mysqldb import MySQL
 from flask_bcrypt import Bcrypt
 
@@ -20,10 +20,10 @@ def index():
     if request.method=='POST':
         userdetails=request.form
         name=userdetails['name']
-        hashed_password=bcrypt.generate_password_hash(userdetails['password']).decode('utf-8')
+        password=userdetails['password']
         location=userdetails['location']
         cur=mysql.connection.cursor()
-        cur.execute("INSERT INTO user(user_name,user_pass,location) VALUES(%s,%s,%s)",(name,hashed_password,location))
+        cur.execute("INSERT INTO user(user_name,user_pass,location) VALUES(%s,%s,%s)",(name,password,location))
         
         mysql.connection.commit()
         cur.close()
@@ -35,14 +35,17 @@ def login():
 
     
     if request.method=='POST':
+        
         userdetails=request.form
         name=userdetails['name']
-        hashed_password=bcrypt.generate_password_hash(userdetails['password']).decode('utf-8')
-        
+        password=userdetails['password']
+        print(name,password)
         cur=mysql.connection.cursor()
-        cur.execute('SELECT *FROM user WHERE user_name=%s AND user_pass=%s',(name,hashed_password))
+        cur.execute('SELECT *FROM user WHERE user_name=%s AND user_pass=%s',(name,password))
         record=cur.fetchone()
+        print(record)
         if record:
+            print('1')
             session['loggedin']=True
             session['user_id']=record[0]
             return redirect(url_for('book'))
@@ -53,23 +56,28 @@ def login():
     return render_template('login.html')
 
 @app.route('/book',methods={'GET','POST'})
-def books():
+def book():
     if request.method=='POST':
         book=request.form
         name=book['name']
         author=book['author']
         genre=book['genre']
-        user_id=book['user_id']
+        user_id=session['user_id']
         cur=mysql.connection.cursor()
         cur.execute("INSERT INTO book(book_name,author,genre,user_id) VALUES(%s,%s,%s,%s)",(name,author,genre,user_id))
         mysql.connection.commit()
         cur.close()
         return 'book_added'
     return render_template('book.html',user_id=session['user_id'])
+@app.route('/test',methods={'GET','POST'})
+def test():
+   d={
+       '1':'book_name','2':'author'
+   }
+   return jsonify(d)
 
 
 
        
 if __name__=='main':
     app.run(debug=True)
-        
