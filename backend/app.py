@@ -26,9 +26,15 @@ def index():
         cur.execute("INSERT INTO user(user_name,user_pass,location) VALUES(%s,%s,%s)",(name,password,location))
         
         mysql.connection.commit()
+        #j={
+    #        'username':name,'location':location
+    #    }
         cur.close()
         return redirect(url_for('login'))
     return render_template('index.html')
+# return render_template('index.html',jsonify(j))
+# or return jsonify(j),render_template('index.html')
+
 @app.route('/login',methods={'GET','POST'})
 
 def login():
@@ -48,12 +54,16 @@ def login():
             print('1')
             session['loggedin']=True
             session['user_id']=record[0]
+            response = {'success': True}
             return redirect(url_for('book'))
         else:
             msg="INCOREECT DETAILS"
+            response = {'success': False}
      
        
     return render_template('login.html')
+#return jsonify(response)
+#return jsonify(response),render_template('login.html)
 
 @app.route('/book',methods={'GET','POST'})
 def book():
