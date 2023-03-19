@@ -50,7 +50,7 @@ def login():
             session['user_id']=record[0]
             return redirect(url_for('book'))
         else:
-            msg="INCOREECT DETAILS"
+            msg="INCORRECT DETAILS"
      
        
     return render_template('login.html')
