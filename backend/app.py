@@ -58,7 +58,6 @@ def login():
             return redirect(url_for('book'))
         else:
             msg="INCOREECT DETAILS"
-            response = {'success': False}
      
        
     return render_template('login.html')
