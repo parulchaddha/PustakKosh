@@ -54,7 +54,7 @@ def login():
             print('1')
             session['loggedin']=True
             session['user_id']=record[0]
-            response = {'success': True}
+           # response = {'success': True}
             return redirect(url_for('book'))
         else:
             msg="INCOREECT DETAILS"
