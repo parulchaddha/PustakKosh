@@ -1,7 +1,7 @@
 from flask import Flask,render_template,request,redirect,url_for,session,jsonify
 import db
 from flask_mysqldb import MySQL
-from flask_bcrypt import Bcrypt
+#from flask_bcrypt import Bcrypt
 
 app = Flask(__name__)
 app.config['MYSQL_HOST']='localhost'
@@ -9,7 +9,7 @@ app.config['MYSQL_USER']='root'
 app.config['MYSQL_PASSWORD']='10082003'
 app.config['MYSQL_DB']='pustakkosh'
 mysql=MySQL(app)
-bcrypt=Bcrypt(app)
+#bcrypt=Bcrypt(app)
 
 
 
@@ -91,7 +91,7 @@ def needy_dis():
     cur = mysql.connection.cursor()
     query = "SELECT * FROM book"
     cur.execute(query)
-    books = cur.fetchall()-
+    books = cur.fetchall()
     print("All Available Books: ")
     for book in books:
         print(book)
