@@ -41,15 +41,15 @@ function NavScrollExample() {
             style={{ maxHeight: '100px' }}
             navbarScroll
           >
-            <Nav.Link href="#">Home</Nav.Link>
+            <Nav.Link href="/">Home</Nav.Link>
             <Nav.Link href="/donor">Donor</Nav.Link>
             <Nav.Link href="#" >Needy</Nav.Link>
             <Nav.Link href="#" >Learn</Nav.Link>
             <Nav.Link href="#" >Community</Nav.Link>
           </Nav>
           <Nav>
-          <Nav.Link href="#"><Button variant="light">Login</Button></Nav.Link>
-            <Nav.Link href="#">
+          <Nav.Link href="/login"><Button variant="light">Login</Button></Nav.Link>
+            <Nav.Link href="/signup">
             <Button variant="light">Signup</Button>
             </Nav.Link>
           </Nav>
