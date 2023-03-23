@@ -2,7 +2,7 @@ import mysql.connector
 mydb = mysql.connector.connect(
   host="localhost",
   user="root",
-  password="Sonam11",
+  password="10082003",
   database="pustakkosh"
 )
 cur = mydb.cursor()
@@ -16,18 +16,21 @@ def get_all_books(user_id=None, donation_status=None):
     
     if user_id==None and donation_status==None:
      query = "SELECT book_id,book_name,author,genre,donation_status,request_count FROM book "
-     rows = cur.execute(query) # list of tuples
+     cur.execute(query) # list of tuples
+     rows=cur.fetchall()
     elif user_id==None:
      query = "SELECT book_id,book_name,author,genre,donation_status,request_count FROM book WHERE donation_status=%s"
-     rows = cur.execute(query,(donation_status,))
+     cur.execute(query,(donation_status,))
+     rows=cur.fetchall()
     elif donation_status==None:
      query= "SELECT book_id,book_name,author,genre,donation_status,request_count FROM book WHERE user_id=%s"
-     print(query)
+     
      cur.execute(query,(user_id,))
      rows=cur.fetchall()
     else:
      query = "SELECT book_id,book_name,author,genre,donation_status,request_count FROM book WHERE user_id=%s and donation_status=%s"
-     rows = cur.execute(query,(user_id,donation_status))
+     cur.execute(query,(user_id,donation_status))
+     rows=cur.fetchall()
     # (1, user_id, name, author, genre, desc, donation_stauts, req_cnt )
     
     # convert to list of dict
@@ -45,9 +48,9 @@ def get_all_books(user_id=None, donation_status=None):
             #...
         }
         result.append(entry)
-    
+    # print(result)
     return result
-
+# get_all_books(1)
 def update_request_for_book(book_id, request_user_id):
     # prepare update query for book table
 
@@ -63,7 +66,7 @@ def update_request_for_book(book_id, request_user_id):
 
     request_tbl_q = " INSERT INTO request(request_user_id,book_id,queue_order) VALUES(%s,%s,%s)"
     try:
-        print('1')
+        
         cur.execute(request_tbl_q,(request_user_id,book_id,req_cnt))
         mydb.commit()
     except:
@@ -75,7 +78,7 @@ def update_request_for_book(book_id, request_user_id):
     
     print(rows)
     return{
-        'status': True,
+        'stauts': True,
         'request_added': {
             'request_id': rows[0][0],
             'book_id': rows[0][2],
@@ -83,6 +86,8 @@ def update_request_for_book(book_id, request_user_id):
 #            ....
         }
     }
+# update_request_for_book(7, 1)
+# update_request_for_book()
 def add_new_book(user_id, book_name, author, genre, description, status):
     query = "INSERT INTO book(book_name,description,author,genre,donation_status,user_id) VALUES (%s,%s,%s,%s,%s,%s)"
     try:
@@ -112,7 +117,7 @@ def add_new_book(user_id, book_name, author, genre, description, status):
         }
     }
 
-    
+# add_new_book(1,'pj','rr','fic','def','pending')
 def get_requested_items(request_user_id):
         query="Select * from book left join request on book.book_id=request.book_id WHERE request_user_id=%s"
         cur.execute(query,(request_user_id,))
@@ -120,3 +125,4 @@ def get_requested_items(request_user_id):
         myresult = cur.fetchall()
         print(myresult)
         return myresult
+# get_requested_items(1)
