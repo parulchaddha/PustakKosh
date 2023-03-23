@@ -2,7 +2,7 @@ import mysql.connector
 mydb = mysql.connector.connect(
   host="localhost",
   user="root",
-  password="10082003",
+  password="Sonam11",
   database="pustakkosh"
 )
 cur = mydb.cursor()
@@ -75,7 +75,7 @@ def update_request_for_book(book_id, request_user_id):
     
     print(rows)
     return{
-        'stauts': True,
+        'status': True,
         'request_added': {
             'request_id': rows[0][0],
             'book_id': rows[0][2],
@@ -83,7 +83,6 @@ def update_request_for_book(book_id, request_user_id):
 #            ....
         }
     }
-update_request_for_book()
 def add_new_book(user_id, book_name, author, genre, description, status):
     query = "INSERT INTO book(book_name,description,author,genre,donation_status,user_id) VALUES (%s,%s,%s,%s,%s,%s)"
     try:
