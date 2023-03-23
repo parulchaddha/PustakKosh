@@ -3,16 +3,16 @@ import Card from 'react-bootstrap/Card';
 import { Link } from 'react-router-dom';
 import Dropdown from 'react-bootstrap/Dropdown';
 
+
 function BasicExample() {
   return (
     <>
       <div className="container-fluid py-3">
         <div className="row">
           <h1 className='text-center'>Donor Page</h1>
-
           <div style={{ display: 'flex', justifyContent: 'space-between' }}>
 
-            <Link to="/add-donor" className='p-2'><Button variant="dark"> +Add New Book</Button></Link>
+            <Link to="/add-donor" className='p-2'><Button variant="dark" > +Add New Book</Button></Link>
 
             <Dropdown>
               <Dropdown.Toggle id="dropdown-button-dark-example1" variant="dark">
