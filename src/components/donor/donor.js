@@ -42,7 +42,7 @@ function BasicExample() {
                   Some quick example text to build on the card title and make up the
                   bulk of the card's content.
                 </Card.Text>
-                <Button variant="primary">Shop Now</Button>
+                <Button variant="primary" >Check Requests</Button>
               </Card.Body>
             </Card>
           </div>
@@ -54,7 +54,7 @@ function BasicExample() {
                   Some quick example text to build on the card title and make up the
                   bulk of the card's content.
                 </Card.Text>
-                <Button variant="primary">Shop Now</Button>
+                <Button variant="primary" onclick=" ">Check Requests</Button>
               </Card.Body>
             </Card>
           </div>
@@ -66,7 +66,7 @@ function BasicExample() {
                   Some quick example text to build on the card title and make up the
                   bulk of the card's content.
                 </Card.Text>
-                <Button variant="primary">Shop Now</Button>
+                <Button variant="primary">Check Requests</Button>
               </Card.Body>
             </Card>
           </div>
@@ -78,7 +78,7 @@ function BasicExample() {
                   Some quick example text to build on the card title and make up the
                   bulk of the card's content.
                 </Card.Text>
-                <Button variant="primary">Shop Now</Button>
+                <Button variant="primary">Check Requests</Button>
               </Card.Body>
             </Card>
           </div>
