@@ -30,10 +30,32 @@ def get_all_books():
 #add_new_book(user_id, book_name, author, genre, description, status)
 @app.route('/add_new_book',methods={'POST'})
 def add_new_book():
-    print(request.get_json())
+   if request.method=='POST':
+   
+    data=request.get_json()
+    user_id = data['user_id']
+    book_name=data['book_name']
+    author=data['author']
+    genre=data['genre']
+    description=data['description']
+
+    donation_status = data['donation_status']
+    db.add_new_book(user_id, book_name, author, genre, description, donation_status)
     return jsonify(request.get_json())
+   if request.method=='GET':
+    
+    data=request.get_json()
+    user_id = data['user_id']
+    book_name=data['book_name']
+    author=data['author']
+    genre=data['genre']
+    description=data['description']
 
-
+    donation_status = data['donation_status']
+    db.add_new_book(user_id, book_name, author, genre, description, donation_status)
+    return jsonify(request.get_json())
+  
+  
 
 # cur=mysql.connection.cursor()
 app.secret_key="super secret key"
