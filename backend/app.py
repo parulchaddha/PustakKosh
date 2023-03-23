@@ -4,20 +4,34 @@ from flask_mysqldb import MySQL
 #from flask_bcrypt import Bcrypt
 
 app = Flask(__name__)
-app.config['MYSQL_HOST']='localhost'
-app.config['MYSQL_USER']='root'
-app.config['MYSQL_PASSWORD']='10082003'
-app.config['MYSQL_DB']='pustakkosh'
-mysql=MySQL(app)
+#app.config['MYSQL_HOST']='localhost'
+#app.config['MYSQL_USER']='root'
+#app.config['MYSQL_PASSWORD']='Sonam11'
+#app.config['MYSQL_DB']='pustakkosh'
+#mysql=MySQL(app)
 #bcrypt=Bcrypt(app)
 
 
 
 @app.route('/get_all_books',methods={'GET'})
 def get_all_books():
-    print(request.args)
+
+    # get query params
+    # how to get get parameter and post parameter from flast request object
+    user_id = request.args.get('user_id')
+    donation_status = request.args.get('donation_status')
+    print(user_id,donation_status)
+    #result = db.get_all_books(user_id, donation_status)
+    result={"user_id":user_id}
+    return jsonify(result)
 
 
+
+#add_new_book(user_id, book_name, author, genre, description, status)
+@app.route('/add_new_book',methods={'POST'})
+def add_new_book():
+    print(request.get_json())
+    return jsonify(request.get_json())
 
 
 
