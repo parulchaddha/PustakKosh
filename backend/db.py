@@ -1,21 +1,25 @@
 import mysql.connector
-mydb = mysql.connector.connect(
+
+def get_db_connection():
+  mydb = mysql.connector.connect(
   host="localhost",
   user="root",
   password="10082003",
   database="pustakkosh"
-)
-cur = mydb.cursor()
+  )
+ 
+  return mydb
 
 def get_all_books(user_id=None, donation_status=None):
     # prepare sql query
 
     # if not None both
     
-
-    
+    db_connec=get_db_connection()
+    cur = db_connec.cursor()
     if user_id==None and donation_status==None:
      query = "SELECT book_id,book_name,author,genre,donation_status,request_count FROM book "
+    
      cur.execute(query) # list of tuples
      rows=cur.fetchall()
     elif user_id==None:
@@ -31,11 +35,12 @@ def get_all_books(user_id=None, donation_status=None):
      query = "SELECT book_id,book_name,author,genre,donation_status,request_count FROM book WHERE user_id=%s and donation_status=%s"
      cur.execute(query,(user_id,donation_status))
      rows=cur.fetchall()
-    # (1, user_id, name, author, genre, desc, donation_stauts, req_cnt )
+    
     
     # convert to list of dict
     result = []
     for row in rows:
+        
         entry = {
             'book_id': row[0],
             'book_name': row[1],
@@ -47,13 +52,15 @@ def get_all_books(user_id=None, donation_status=None):
 
             #...
         }
+        
         result.append(entry)
-    # print(result)
+    print(result)
     return result
-# get_all_books(1)
+get_all_books(2)
 def update_request_for_book(book_id, request_user_id):
     # prepare update query for book table
-
+    db_connec=get_db_connection()
+    cur = db_connec.cursor()
     select_query = 'SELECT request_count FROM book WHERE book_id=%s'
     cur.execute(select_query,(book_id,))
     cnt=cur.fetchall()
@@ -61,14 +68,14 @@ def update_request_for_book(book_id, request_user_id):
     req_cnt  =cnt[0][0]+ 1
     update_book_q = "UPDATE book SET request_count=%s WHERE book_id=%s"
     cur.execute(update_book_q,(req_cnt,book_id))
-    mydb.commit()
+    db_connec.commit()
     # prepare add to request table
 
     request_tbl_q = " INSERT INTO request(request_user_id,book_id,queue_order) VALUES(%s,%s,%s)"
     try:
         
         cur.execute(request_tbl_q,(request_user_id,book_id,req_cnt))
-        mydb.commit()
+        db_connec.commit()
     except:
         return {'status': False, 'error': "Failed to insert"}
     # search the insert request
@@ -89,15 +96,17 @@ def update_request_for_book(book_id, request_user_id):
 # update_request_for_book(7, 1)
 # update_request_for_book()
 def add_new_book(user_id, book_name, author, genre, description, status):
+    db_connec=get_db_connection()
+    cur = db_connec.cursor()
     query = "INSERT INTO book(book_name,description,author,genre,donation_status,user_id) VALUES (%s,%s,%s,%s,%s,%s)"
-    try:
+    # try:
         
-        cur.execute(query, (book_name, description,
+       
+    # except:
+    #         return {'status': False,'error': "Failed to insert"}
+    cur.execute(query, (book_name, description,
                          author, genre, status, user_id))
-        mydb.commit()
-    except:
-            return {'status': False,'error': "Failed to insert"}
-        
+    db_connec.commit()   
     query="SELECT book_id,book_name,author,genre,donation_status,user_id,request_count,description from book where book_name=%s and user_id=%s"
     val = (book_name, user_id)
     cur.execute(query, val)
@@ -119,10 +128,70 @@ def add_new_book(user_id, book_name, author, genre, description, status):
 
 # add_new_book(1,'pj','rr','fic','def','pending')
 def get_requested_items(request_user_id):
-        query="Select * from book left join request on book.book_id=request.book_id WHERE request_user_id=%s"
+        db_connec=get_db_connection()
+        cur = db_connec.cursor()
+        query="Select book.book_id,book_name,author,genre,queue_order,request_status,user_name,email_id from book left join request on book.book_id=request.book_id left join user on book.user_id=user.user_id WHERE request_user_id=%s"
         cur.execute(query,(request_user_id,))
+        rows=cur.fetchall()
+        result = []
+        for row in rows:
+        
+       
+          entry = {
+            'book_id': row[0],
+            'book_name': row[1],
+            
+            'author':row[2],
+            
+            'genre':row[3],
+            'queue_order':row[4],
+            'request_status':row[5],
+            'user_name':row[6],
+            'email_id':row[7]
 
-        myresult = cur.fetchall()
-        print(myresult)
-        return myresult
+             
+
+            #...
+            }
+        result.append(entry)
+        print(result)
+        return result
 # get_requested_items(1)
+def get_needy_info(book_id):
+    db_connec=get_db_connection()
+    cur = db_connec.cursor()
+    query="Select * from request left join user on request.request_user_id=user.user_id WHERE book_id=%s"
+    cur.execute(query,(book_id,))
+    rows=cur.fetchall()
+    result = []
+    for row in rows:
+        
+       
+        entry = {
+            'request_id': row[0],
+            'request_user_id': row[1],
+            
+            'queue_order':row[3],
+            
+            'user_name':row[5]
+             
+
+            #...
+            }
+        result.append(entry)
+    print(result)
+    return result
+# get_needy_info(15)
+def accept_book_request(book_id,request_id):
+    db_connec=get_db_connection()
+    cur = db_connec.cursor()
+    update_request = "UPDATE request SET request_status=%s WHERE request_id=%s"
+    cur.execute(update_request,("COMPLETED",request_id))
+    db_connec.commit()
+    update_book = "UPDATE book SET donation_status=%s WHERE book_id=%s"
+    cur.execute(update_book,("COMPLETED",book_id))
+    db_connec.commit()
+    result="donation completed"
+    return result
+      
+# accept_book_request(15,49)
