@@ -1,7 +1,7 @@
 from flask import Flask,render_template,request,redirect,url_for,session,jsonify
 import db_service
-from flask_mysqldb import MySQL
-#from flask_bcrypt import Bcrypt
+
+
 
 app = Flask(__name__)
 
@@ -11,7 +11,7 @@ app = Flask(__name__)
 @app.route('/get_all_books',methods={'GET'})
 def get_all_books():
     """ 
-    to fetch 
+    to fetch all the books filtered by certain parameters
     """
     
     user_id = request.args.get('user_id')
@@ -26,8 +26,10 @@ def get_all_books():
 
 @app.route('/add_new_book',methods={'POST'})
 def add_new_book():
-#    if request.method=='POST':
-   
+
+    """
+    to add a new book donated by a user
+    """
     data=request.get_json()
     user_id = data['user_id']
     book_name=data['book_name']
@@ -41,8 +43,10 @@ def add_new_book():
 
 @app.route('/update_request_for_book',methods={'POST'})
 def update_request_for_book():
-#    if request.method=='POST':
-   
+
+    """
+    add a request for a book by needy
+    """
     data=request.get_json()
     request_user_id = data['user_id']
     book_id=data['book_id']
@@ -55,32 +59,36 @@ def update_request_for_book():
 
 @app.route('/get_requested_items',methods={'GET'})
 def get_requested_items():
-
-    # get query params
-    # how to get get parameter and post parameter from flast request object
+    """
+    fetch the requested items by a particular needy
+    """
+    
     request_user_id = request.args.get('user_id')
     
-    # print(user_id,donation_status)
+    
     result = db_service.get_requested_items(request_user_id)
-    # result={"user_id":user_id}
+   
     return jsonify(result)
 
 @app.route('/get_needy_info',methods={'GET'})
 def get_needy_info():
-
-    # get query params
-    # how to get get parameter and post parameter from flast request object
+    """
+    get list of interested needy for each book donated
+    """
+    
     book_id = request.args.get('book_id')
     
-    # print(user_id,donation_status)
+   
     result = db_service.get_needy_info(book_id)
     print(result)
-    # result={"user_id":user_id}
+   
     return jsonify(result)
 @app.route('/accept_book_request',methods={'POST'})
 def accept_book_request():
-#    if request.method=='POST':
-   
+
+    """
+       accept a book request
+    """
     data=request.get_json()
     request_id = data['request_id']
     book_id=data['book_id']
@@ -89,7 +97,6 @@ def accept_book_request():
     
     result=db_service.accept_book_request(book_id,request_id)
     return jsonify(result)
-
 
        
 if __name__=='__main__':
